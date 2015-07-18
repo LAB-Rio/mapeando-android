@@ -25,6 +25,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapViewFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "1";
 
+    // We use this to check changes on location @ startup
+    private static boolean isInitialMapSet = false;
+
     // Setting up MapView
     MapView mapView;
     GoogleMap map;
@@ -57,15 +60,7 @@ public class MapViewFragment extends Fragment {
 
             @Override
             public void onMyLocationChange(Location arg0) {
-                // TODO Auto-generated method stub
-                //map.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(),
-                //      arg0.getLongitude())).title("It's Me!"));
-                LatLng myLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
-
-                // Updates the location and zoom of the MapView
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 13);
-                map.animateCamera(cameraUpdate);
-
+                setInitialCamera(new LatLng(arg0.getLatitude(), arg0.getLongitude()));
             }
         });
 
@@ -75,6 +70,19 @@ public class MapViewFragment extends Fragment {
 
     }
 
+    private void setInitialCamera(LatLng myLocation) {
+
+
+        // TODO Auto-generated method stub
+        //map.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(),
+        //      arg0.getLongitude())).title("It's Me!"));
+        if (!isInitialMapSet) {
+            // Updates the location and zoom of the MapView
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 13);
+            map.animateCamera(cameraUpdate);
+            isInitialMapSet = true;
+        }
+    }
 
 
 
