@@ -49,6 +49,7 @@ public class NavigationActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -89,6 +90,7 @@ public class NavigationActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
+            //getActionBar().setDisplayHomeAsUpEnabled(true);
             getMenuInflater().inflate(R.menu.navigation, menu);
             restoreActionBar();
             return true;
@@ -110,6 +112,11 @@ public class NavigationActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+
 
     /**
      * A placeholder fragment containing a simple view.

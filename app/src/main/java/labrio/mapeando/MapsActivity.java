@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.util.LogWriter;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -23,6 +25,9 @@ public class MapsActivity extends FragmentActivity {
        // setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
     }
+
+
+
 
     @Override
     protected void onResume() {

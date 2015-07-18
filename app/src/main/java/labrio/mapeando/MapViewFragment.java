@@ -1,6 +1,7 @@
 package labrio.mapeando;
 
 import android.app.Activity;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +19,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class MapViewFragment extends Fragment {
@@ -46,17 +50,33 @@ public class MapViewFragment extends Fragment {
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.setMyLocationEnabled(true);
 
-
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         MapsInitializer.initialize(this.getActivity());
 
-        // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(43.1, -87.9), 10);
-        map.animateCamera(cameraUpdate);
+        map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+            @Override
+            public void onMyLocationChange(Location arg0) {
+                // TODO Auto-generated method stub
+                //map.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(),
+                //      arg0.getLongitude())).title("It's Me!"));
+                LatLng myLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
+
+                // Updates the location and zoom of the MapView
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 13);
+                map.animateCamera(cameraUpdate);
+
+            }
+        });
+
+
 
         return view;
 
     }
+
+
+
 
     @Override
     public void onResume() {

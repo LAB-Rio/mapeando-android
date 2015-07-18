@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="headerColorDark">#A11D3B</color>
-    <color name="headerColor">#ed2654</color>
+    <color name="titleColor">#444</color>
+    <color name="headerColorDark">#ed2654</color>
+    <color name="headerColor">#fff</color>
 </resources>
