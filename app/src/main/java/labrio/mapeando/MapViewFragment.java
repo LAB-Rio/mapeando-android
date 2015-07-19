@@ -1,45 +1,33 @@
 package labrio.mapeando;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import labrio.mapeando.adapters.MapeandoService;
 import labrio.mapeando.adapters.RestClient;
 import labrio.mapeando.models.Demand;
 import labrio.mapeando.models.Pin;
+
+import labrio.mapeando.resources.MyClusterItem;
 import labrio.mapeando.resources.PicassoMarker;
+
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -49,6 +37,7 @@ public class MapViewFragment extends Fragment {
 
     // We use this to check changes on location @ startup
     private static boolean isInitialMapSet = false;
+    private ClusterManager<MyClusterItem> mClusterManager;
 
     // Setting up MapView
     MapView mapView;
@@ -99,14 +88,12 @@ public class MapViewFragment extends Fragment {
      */
     private void setInitialCamera(LatLng myLocation) {
 
-
-        // TODO Auto-generated method stub
         //map.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(),
         //      arg0.getLongitude())).title("It's Me!"));
         if (!isInitialMapSet) {
             // Updates the location and zoom of the MapView
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 13);
-            map.animateCamera(cameraUpdate);
+            // Also call for clusterer
+            setUpClusterer(myLocation);
             isInitialMapSet = true;
         }
     }
@@ -146,21 +133,52 @@ public class MapViewFragment extends Fragment {
                 // Set the current category ICON
                 String url = demand.getCategory().getIconUrl();
 
+                addMarkerToClusterer(pin.getLat(), pin.getLong());
 
-                Marker myMarker = map.addMarker(new MarkerOptions()
-                        .position(new LatLng(pin.getLat(), pin.getLong()))
-                        .title(demand.getFullname()));
-
-                PicassoMarker marker = new PicassoMarker(myMarker);
-                Picasso.with(getActivity()).load(url).into(marker);
+//                Marker myMarker = map.addMarker(new MarkerOptions()
+//                        .position(new LatLng(pin.getLat(), pin.getLong()))
+//                        .title(demand.getFullname()));
+//
+//                PicassoMarker marker = new PicassoMarker(myMarker);
+//                Picasso.with(getActivity()).load(url).into(marker);
             }
-
-            Log.d("Retrofit DemandSize", String.valueOf(demandList.demands.size()));
-
-
         }
 
     }
+
+    /**
+     * Set up Marker Clusterer instance
+     * @param initLocation
+     */
+    private void setUpClusterer(LatLng initLocation){
+
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(initLocation, 13);
+        mapView.getMap().moveCamera(cameraUpdate);
+
+        // Initialize the manager with the context (getActivity() to get the context
+        // And get from the mapView the current map instance).
+        mClusterManager = new ClusterManager<MyClusterItem>(getActivity(), mapView.getMap());
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mapView.getMap().setOnCameraChangeListener(mClusterManager);
+        mapView.getMap().setOnMarkerClickListener(mClusterManager);
+
+
+
+
+    }
+
+    /**
+     * Add item to marker clusterer
+     * @param lat
+     * @param lng
+     */
+    private void addMarkerToClusterer(double lat, double lng){
+        mClusterManager.addItem(new MyClusterItem(lat, lng));
+    }
+
 
     @Override
     public void onResume() {
