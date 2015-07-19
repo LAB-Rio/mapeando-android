@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName;
 public class Pin {
 
     @Expose
-    private String lat;
+    private Double lat;
     @SerializedName("long")
     @Expose
-    private String _long;
+    private Double _long;
     @Expose
     private String fullname;
 
@@ -18,7 +18,7 @@ public class Pin {
      * @return
      * The lat
      */
-    public String getLat() {
+    public Double getLat() {
         return lat;
     }
 
@@ -27,7 +27,7 @@ public class Pin {
      * @param lat
      * The lat
      */
-    public void setLat(String lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
@@ -36,7 +36,7 @@ public class Pin {
      * @return
      * The _long
      */
-    public String getLong() {
+    public Double getLong() {
         return _long;
     }
 
@@ -45,7 +45,7 @@ public class Pin {
      * @param _long
      * The long
      */
-    public void setLong(String _long) {
+    public void setLong(Double _long) {
         this._long = _long;
     }
 

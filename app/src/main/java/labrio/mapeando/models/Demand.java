@@ -6,7 +6,13 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 public class Demand {
+
+
+    @Expose
+    @SerializedName("demands")
+    public List<Demand> demands;
 
     @Expose
     private Integer id;
@@ -24,6 +30,14 @@ public class Demand {
     private List<Pin> pins = new ArrayList<Pin>();
     @Expose
     private User user;
+
+
+    /**
+     *
+     * @return
+     * the demandsList
+     */
+
 
     /**
      *
